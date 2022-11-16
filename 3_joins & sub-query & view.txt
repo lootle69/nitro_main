@@ -1,0 +1,80 @@
+JOINS
+
+
+mysql> create table customer(cust_id int PRIMARY KEY NOT NULL,name varchar(50),City varchar(50));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> insert into customer values(1,'Ajay','Pune');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into customer values(2,'Jay','Mumbai');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into customer values(3,'Soumitra','Aurangabad');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from customer;
++---------+----------+------------+
+| cust_id | name     | City       |
++---------+----------+------------+
+|       1 | Ajay     | Pune       |
+|       2 | Jay      | Mumbai     |
+|       3 | Soumitra | Aurangabad |
++---------+----------+------------+
+3 rows in set (0.00 sec)
+
+mysql> create table orders(order_id int,cust_id int,order_des varchar(255));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> insert into orders values(1123,1,'gadgkhgakdh uihgdaui uigdigd ui');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into orders values(1567,2,'jdi kdeh uw iiqwj');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into orders values(1562,4,'jhdbhjaD UUHDUIAQ UIHDj');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into orders values(1562,44,'jdi kdeh uw iiqwj');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from orders;
++----------+---------+---------------------------------+
+| order_id | cust_id | order_des                       |
++----------+---------+---------------------------------+
+|     1123 |       1 | gadgkhgakdh uihgdaui uigdigd ui |
+|     1567 |       2 | jdi kdeh uw iiqwj               |
+|     1562 |       4 | jhdbhjaD UUHDUIAQ UIHDj         |
+|     1562 |      44 | jdi kdeh uw iiqwj               |
++----------+---------+---------------------------------+
+4 rows in set (0.00 sec)
+
+mysql> select orders.order_id,customer.name from orders Inner Join customer on orders.cust_id=customer.cust_id;
++----------+------+
+| order_id | name |
++----------+------+
+|     1123 | Ajay |
+|     1567 | Jay  |
++----------+------+
+2 rows in set (0.01 sec)
+
+mysql> select orders.order_id,customer.name from orders Left Join customer on orders.cust_id=customer.cust_id;
++----------+------+
+| order_id | name |
++----------+------+
+|     1123 | Ajay |
+|     1567 | Jay  |
+|     1562 | NULL |
+|     1562 | NULL |
++----------+------+
+4 rows in set (0.00 sec)
+
+mysql> select orders.order_id,customer.name from orders Right Join customer on orders.cust_id=customer.cust_id;
++----------+----------+
+| order_id | name     |
++----------+----------+
+|     1123 | Ajay     |
+|     1567 | Jay      |
+|     NULL | Soumitra |
++----------+----------+
+3 rows in set (0.00 sec)

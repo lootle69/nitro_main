@@ -1,0 +1,187 @@
+
+mysql> use library;
+Database changed
+mysql> create table borrower(Roll_no int(10) primary key, Name varchar(20) not null, Date_of_issue date not null, Name_of_book varchar(20) not null, Status varchar(1) not null);
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> desc borrower;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| Roll_no       | int         | NO   | PRI | NULL    |       |
+| Name          | varchar(20) | NO   |     | NULL    |       |
+| Date_of_issue | date        | NO   |     | NULL    |       |
+| Name_of_book  | varchar(20) | NO   |     | NULL    |       |
+| Status        | varchar(1)  | NO   |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+5 rows in set (0.03 sec)
+
+mysql> create table fine(Roll_no int(10), Date date not null, Amount int(10), foreign key(Roll_no) references borrower(Roll_no));
+Query OK, 0 rows affected, 2 warnings (0.02 sec)
+
+mysql> desc fine;
++---------+------+------+-----+---------+-------+
+| Field   | Type | Null | Key | Default | Extra |
++---------+------+------+-----+---------+-------+
+| Roll_no | int  | YES  | MUL | NULL    |       |
+| Date    | date | NO   |     | NULL    |       |
+| Amount  | int  | YES  |     | NULL    |       |
++---------+------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into borrower values(1, 'Amruta', '2022/07/18', 'MySQL', 'I');
+Query OK, 1 row affected, 1 warning (0.00 sec)
+
+mysql> insert into borrower values(2, 'Siddeshdesh', '2022/06/02', 'Computer Network', 'I');
+Query OK, 1 row affected, 1 warning (0.00 sec)
+
+mysql> insert into borrower values(3, 'Swarali', '2022/06/22', 'Operating System', 'I');
+Query OK, 1 row affected, 1 warning (0.01 sec)
+
+mysql> insert into borrower values(4, 'Bhavesh', '2022/07/17', 'Design of Complier', 'I');
+Query OK, 1 row affected, 1 warning (0.00 sec)
+
+mysql> insert into borrower values(5, 'Chaitali', '2022/08/15', 'Internet of Things', 'I');
+Query OK, 1 row affected, 1 warning (0.00 sec)
+
+mysql> insert into borrower values(6, 'Omkar', '2022/09/02', 'Mobile Computing', 'I');
+Query OK, 1 row affected, 1 warning (0.00 sec)
+
+mysql> select * from borrower;
++---------+-------------+---------------+--------------------+--------+
+| Roll_no | Name        | Date_of_issue | Name_of_book       | Status |
++---------+-------------+---------------+--------------------+--------+
+|       1 | Amruta      | 2022-07-18    | MySQL              | I      |
+|       2 | Siddeshdesh | 2022-06-02    | Computer Network   | I      |
+|       3 | Swarali     | 2022-06-22    | Operating System   | I      |
+|       4 | Bhavesh     | 2022-07-17    | Design of Complier | I      |
+|       5 | Chaitali    | 2022-08-15    | Internet of Things | I      |
+|       6 | Omkar       | 2022-09-02    | Mobile Computing   | I      |
++---------+-------------+---------------+--------------------+--------+
+6 rows in set (0.00 sec)
+
+mysql> delimiter //
+mysql> create procedure A(IN rollno1 int(10), name1 varchar(20))
+    -> begin
+    -> declare i_date date;
+    -> declare diff int;
+    -> declare fine_amt int;
+    -> declare EXIT HANDLER FOR SQLEXCEPTION SELECT 'Table not found';
+    -> select Date_of_issue into i_date from borrower where Roll_no= rollno1 and Name_of_book = name1;
+    -> select DATEDIFF(CURDATE(), i_date) into diff;
+    -> if(diff>=15 and diff<=30) then
+    -> set fine_amt= diff*5;
+    -> insert into fine values(rollno1, CURDATE(), fine_amt);
+    -> elseif(diff>30) then
+    -> set fine_amt= diff*50;
+    -> insert into fine values(rollno1, CURDATE(), fine_amt);
+    -> end if;
+    -> update borrower set Status= 'R' where Roll_no= rollno1 and Name_of_book = name1;
+    ->  end
+    -> //
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> delimiter ;
+mysql> call A(1, 'MySQL');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from fine;
++---------+------------+--------+
+| Roll_no | Date       | Amount |
++---------+------------+--------+
+|       1 | 2022-11-15 |   6000 |
++---------+------------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from borrower;
++---------+-------------+---------------+--------------------+--------+
+| Roll_no | Name        | Date_of_issue | Name_of_book       | Status |
++---------+-------------+---------------+--------------------+--------+
+|       1 | Amruta      | 2022-07-18    | MySQL              | R      |
+|       2 | Siddeshdesh | 2022-06-02    | Computer Network   | I      |
+|       3 | Swarali     | 2022-06-22    | Operating System   | I      |
+|       4 | Bhavesh     | 2022-07-17    | Design of Complier | I      |
+|       5 | Chaitali    | 2022-08-15    | Internet of Things | I      |
+|       6 | Omkar       | 2022-09-02    | Mobile Computing   | I      |
++---------+-------------+---------------+--------------------+--------+
+6 rows in set (0.00 sec)
+
+mysql> call A(2, 'Computer Network');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from borrower;
++---------+-------------+---------------+--------------------+--------+
+| Roll_no | Name        | Date_of_issue | Name_of_book       | Status |
++---------+-------------+---------------+--------------------+--------+
+|       1 | Amruta      | 2022-07-18    | MySQL              | R      |
+|       2 | Siddeshdesh | 2022-06-02    | Computer Network   | R      |
+|       3 | Swarali     | 2022-06-22    | Operating System   | I      |
+|       4 | Bhavesh     | 2022-07-17    | Design of Complier | I      |
+|       5 | Chaitali    | 2022-08-15    | Internet of Things | I      |
+|       6 | Omkar       | 2022-09-02    | Mobile Computing   | I      |
++---------+-------------+---------------+--------------------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select * from fine;
++---------+------------+--------+
+| Roll_no | Date       | Amount |
++---------+------------+--------+
+|       1 | 2022-11-15 |   6000 |
+|       2 | 2022-11-15 |   8300 |
++---------+------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> call A(5, 'Internet of Things');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from fine;
++---------+------------+--------+
+| Roll_no | Date       | Amount |
++---------+------------+--------+
+|       1 | 2022-11-15 |   6000 |
+|       2 | 2022-11-15 |   8300 |
+|       5 | 2022-11-15 |   4600 |
++---------+------------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from borrower;
++---------+-------------+---------------+--------------------+--------+
+| Roll_no | Name        | Date_of_issue | Name_of_book       | Status |
++---------+-------------+---------------+--------------------+--------+
+|       1 | Amruta      | 2022-07-18    | MySQL              | R      |
+|       2 | Siddeshdesh | 2022-06-02    | Computer Network   | R      |
+|       3 | Swarali     | 2022-06-22    | Operating System   | I      |
+|       4 | Bhavesh     | 2022-07-17    | Design of Complier | I      |
+|       5 | Chaitali    | 2022-08-15    | Internet of Things | R      |
+|       6 | Omkar       | 2022-09-02    | Mobile Computing   | I      |
++---------+-------------+---------------+--------------------+--------+
+6 rows in set (0.00 sec)
+
+mysql> call A(6, 'Mobile Computing');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from borrower;
++---------+-------------+---------------+--------------------+--------+
+| Roll_no | Name        | Date_of_issue | Name_of_book       | Status |
++---------+-------------+---------------+--------------------+--------+
+|       1 | Amruta      | 2022-07-18    | MySQL              | R      |
+|       2 | Siddeshdesh | 2022-06-02    | Computer Network   | R      |
+|       3 | Swarali     | 2022-06-22    | Operating System   | I      |
+|       4 | Bhavesh     | 2022-07-17    | Design of Complier | I      |
+|       5 | Chaitali    | 2022-08-15    | Internet of Things | R      |
+|       6 | Omkar       | 2022-09-02    | Mobile Computing   | R      |
++---------+-------------+---------------+--------------------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select * from fine;
++---------+------------+--------+
+| Roll_no | Date       | Amount |
++---------+------------+--------+
+|       1 | 2022-11-15 |   6000 |
+|       2 | 2022-11-15 |   8300 |
+|       5 | 2022-11-15 |   4600 |
+|       6 | 2022-11-15 |   3700 |
++---------+------------+--------+
+4 rows in set (0.00 sec)
+
+mysql>

@@ -1,0 +1,242 @@
+mysql> use student;
+Database changed
+
+DDL & DML Commands
+
+mysql> create table record(roll_no int, name varchar(20));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from student;
+ERROR 1146 (42S02): Table 'student.student' doesn't exist
+mysql> select * from record;
+Empty set (0.00 sec)
+
+mysql> insert into record values(3, "Rajesh");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into record values(3, "Rajesh");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into record values(1, "Dilip");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into record values(2, "Abhimanyu");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into record values(4, "Gitesh");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from record;
++---------+-----------+
+| roll_no | name      |
++---------+-----------+
+|       3 | Rajesh    |
+|       3 | Rajesh    |
+|       1 | Dilip     |
+|       2 | Abhimanyu |
+|       4 | Gitesh    |
++---------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> delete from record where roll_no=3;
+Query OK, 2 rows affected (0.01 sec)
+
+mysql> select * from record;
++---------+-----------+
+| roll_no | name      |
++---------+-----------+
+|       1 | Dilip     |
+|       2 | Abhimanyu |
+|       4 | Gitesh    |
++---------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> insert into record values(3, "Rajesh");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from record;
++---------+-----------+
+| roll_no | name      |
++---------+-----------+
+|       1 | Dilip     |
+|       2 | Abhimanyu |
+|       4 | Gitesh    |
+|       3 | Rajesh    |
++---------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> alter table record add age int;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from record;
++---------+-----------+------+
+| roll_no | name      | age  |
++---------+-----------+------+
+|       1 | Dilip     | NULL |
+|       2 | Abhimanyu | NULL |
+|       4 | Gitesh    | NULL |
+|       3 | Rajesh    | NULL |
++---------+-----------+------+
+4 rows in set (0.00 sec)
+
+mysql> update record set age=20 where roll_no=1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from record;
++---------+-----------+------+
+| roll_no | name      | age  |
++---------+-----------+------+
+|       1 | Dilip     |   20 |
+|       2 | Abhimanyu | NULL |
+|       4 | Gitesh    | NULL |
+|       3 | Rajesh    | NULL |
++---------+-----------+------+
+4 rows in set (0.00 sec)
+
+mysql> update record set age=21 where roll_no=2;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update record set age=19 where roll_no=3;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update record set age=22 where roll_no=4;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from record;
++---------+-----------+------+
+| roll_no | name      | age  |
++---------+-----------+------+
+|       1 | Dilip     |   20 |
+|       2 | Abhimanyu |   21 |
+|       4 | Gitesh    |   22 |
+|       3 | Rajesh    |   19 |
++---------+-----------+------+
+4 rows in set (0.00 sec)
+
+mysql> alter table record add DOB date;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from record;
++---------+-----------+------+------+
+| roll_no | name      | age  | DOB  |
++---------+-----------+------+------+
+|       1 | Dilip     |   20 | NULL |
+|       2 | Abhimanyu |   21 | NULL |
+|       4 | Gitesh    |   22 | NULL |
+|       3 | Rajesh    |   19 | NULL |
++---------+-----------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> alter table record drop DOB;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from record;
++---------+-----------+------+
+| roll_no | name      | age  |
++---------+-----------+------+
+|       1 | Dilip     |   20 |
+|       2 | Abhimanyu |   21 |
+|       4 | Gitesh    |   22 |
+|       3 | Rajesh    |   19 |
++---------+-----------+------+
+4 rows in set (0.00 sec)
+
+mysql> rename table record to info;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from record;
+ERROR 1146 (42S02): Table 'student.record' doesn't exist
+mysql> select * from info;
++---------+-----------+------+
+| roll_no | name      | age  |
++---------+-----------+------+
+|       1 | Dilip     |   20 |
+|       2 | Abhimanyu |   21 |
+|       4 | Gitesh    |   22 |
+|       3 | Rajesh    |   19 |
++---------+-----------+------+
+4 rows in set (0.00 sec)
+
+
+
+VIEWS
+
+mysql> create view collection as select roll_no, name from info where roll_no=3;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from collection;
++---------+--------+
+| roll_no | name   |
++---------+--------+
+|       3 | Rajesh |
++---------+--------+
+1 row in set (0.01 sec)
+
+mysql> truncate table info;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> select * from info;
+Empty set (0.00 sec)
+
+mysql> drop table info;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> drop table info;
+ERROR 1051 (42S02): Unknown table 'student.info'
+mysql>
+
+
+
+
+SEQUENCE
+
+mysql> create table emp(emp_id int,name varchar(50),Address varchar(200),City varchar(50));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> insert into emp values(1,'Ajay','Building B, Mono Colony, Mumbai','Mumbai');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(2,'Jay','Building C, ABC Colony, pune','Pune');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(3,'Shawnak','Building D, ABCD Colony','Aurangabad');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into emp values(4,'Ashwini','Building E, AJ Colony','Hydrabad');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from emp;
++--------+---------+---------------------------------+------------+
+| emp_id | name    | Address                         | City       |
++--------+---------+---------------------------------+------------+
+|      1 | Ajay    | Building B, Mono Colony, Mumbai | Mumbai     |
+|      2 | Jay     | Building C, ABC Colony, pune    | Pune       |
+|      3 | Shawnak | Building D, ABCD Colony         | Aurangabad |
+|      4 | Ashwini | Building E, AJ Colony           | Hydrabad   |
++--------+---------+---------------------------------+------------+
+4 rows in set (0.00 sec)
+
+mysql> create table student(stu_id int PRIMARY KEY NOT NULL AUTO_INCREMENT,name varchar(50),Address varchar(200),City varchar(50));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> Alter table student Auto_increment=10;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into student(name,Address,City) values('Ashwini','Building E, AJ Colony','Hydrabad');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from student;
++--------+---------+-----------------------+----------+
+| stu_id | name    | Address               | City     |
++--------+---------+-----------------------+----------+
+|     10 | Ashwini | Building E, AJ Colony | Hydrabad |
++--------+---------+-----------------------+----------+
+1 row in set (0.00 sec)

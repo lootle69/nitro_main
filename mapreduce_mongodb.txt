@@ -1,0 +1,87 @@
+1. create database
+test> use map
+switched to db map
+2. create collection
+map> db.createCollection("books")
+{ ok: 1 }
+3. insert documents
+map> db.books.insertOne({'name':'JAVA','pages':'100'})
+{
+ acknowledged: true,
+ insertedId: ObjectId("635d28cbeb14641fd96c5c23")
+}
+map> db.books.insertOne({'name':'PYTHON','pages':'200'})
+{
+ acknowledged: true,
+ insertedId: ObjectId("635d28dfeb14641fd96c5c24")
+}
+map> db.books.insertOne({'name':'XML','pages':'300'})
+{
+ acknowledged: true,
+ insertedId: ObjectId("635d28eeeb14641fd96c5c25")
+}
+map> db.books.insertOne({'name':'C++','pages':'350'})
+{
+ acknowledged: true,
+ insertedId: ObjectId("635d28ffeb14641fd96c5c26")
+}
+map> db.books.insertOne({'name':'JAVASCRIPT','pages':'250'})
+{
+ acknowledged: true,
+ insertedId: ObjectId("635d2917eb14641fd96c5c27")
+}
+4. display documents
+map> db.books.find().pretty()
+[
+ {
+ _id: ObjectId("635d28cbeb14641fd96c5c23"),
+ name: 'JAVA',
+ pages: '100'
+ },
+ {
+ _id: ObjectId("635d28dfeb14641fd96c5c24"),
+ name: 'PYTHON',
+ pages: '200'
+ },
+ {
+ _id: ObjectId("635d28eeeb14641fd96c5c25"),
+ name: 'XML',
+ pages: '300'
+ },
+ {
+ _id: ObjectId("635d28ffeb14641fd96c5c26"),
+ name: 'C++',
+ pages: '350'
+ },
+ {
+ _id: ObjectId("635d2917eb14641fd96c5c27"),
+ name: 'JAVASCRIPT',
+ pages: '250'
+ }
+]
+5.write map function on books
+map> var map = function() 
+{
+var category;
+if(this.pages>=250)
+category='Big Books';
+else category='Small Books';
+emit(category,{name:this.name});
+};
+6. write reduce function on books
+map> var reduce = function(key, values)
+{
+var sum =0;
+values.forEach(function(doc)
+{
+sum = sum+1;
+});
+return{books:sum};};
+7. write mapreduce function on books
+map> var count = db.books.mapReduce(map,reduce, {out:"book_results"});
+8. display the combined result
+map> db[count.result].find()
+[
+ { _id: 'Big Books', value: { books: 3 } },
+ { _id: 'Small Books', value: { books: 2 } }
+]

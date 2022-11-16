@@ -1,0 +1,99 @@
+Create
+
+1] db.collection.insertOne()
+2] db.collection.insertMany()
+
+program:
+db.cars.insertOne(
+//inserting Bugatti Veyron Mansory Vivere-2005 into cars collection
+    {
+       name: "Bugatti Veyron Mansory Vivere"
+       model: "2005"
+    }
+)
+db.cars.insertMany([{
+//inserting three cars along with their models into cars collection
+       name: "Bugatti Veyron Mansory Vivere"
+       model: "2005"
+},{
+       name: "Aston Martin AM-RB 001"
+       model: "2018"
+},{
+       name: "Ferrari Pininfarina Sergio"
+       model: "2013"
+}])
+
+************************************************************************************************************************
+
+Read
+
+1] db.collection.find()
+2] db.collection.find(query)
+
+program:
+db.cars.find() // no parameters
+
+output
+{ "_id" : ObjectId("1"), "name" : "Bugatti Veyron Mansory Vivere", "model" : "2005" }
+{ "_id" : ObjectId("2"), "name" : "Aston Martin AM-RB 001", "model" : "2018" }
+{ "_id" : ObjectId("3"), "name" : "Ferrari Pininfarina Sergio", "2013" : "2005" }
+
+program
+db.cars.find({"model": "2005"}) // with one paramter
+
+output
+{ "_id" : ObjectId("1"), "name" : "Bugatti Veyron Mansory Vivere", "model" : "2005" }
+
+***********************************************************************************************************************************
+Update:
+
+1] db.collection.updateOne()
+2] db.collection.updateMany()
+3] db.collection.replaceOne()
+
+
+program
+replaceOne({"_id" : ObjectId("1")}, { "new_model" : 2020})
+
+output:
+{
+   "_id" : ObjectId("1"),
+   "new_model" : 2020
+}
+
+program:
+updateOne({"_id" : ObjectId("1")}, {＄set: { "new_model" : 2020}})
+
+output:
+{
+   "_id" : ObjectId("1"),
+   "model" : 2005,
+   "new_model" : 2020
+}
+
+program:
+updateMany({"_id" : ObjectId("1")}, {＄set: { "name" : "NewName"}, ＄set: { "new_model" : 2020}})
+
+output:
+{
+   "_id" : ObjectId("1"),
+   "model" : 2005,
+   "new_model" : 2020
+   "name" : "newName"
+}
+
+****************************************************************************************************************************************************
+Delete
+
+1] db.collection.deleteOne()
+2] db.collection.deleteMany()
+
+program:
+db.cars.deleteOne(
+//deletes one car having model "2013"
+    { "model": "2013" }
+)
+db.cars.deleteMany(
+//delete all cars having model "2013"
+    { "model": "2013" }
+)

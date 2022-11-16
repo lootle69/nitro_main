@@ -1,0 +1,114 @@
+Example to Connect Java Application with mysql database
+
+In this example, sonoo is the database name, root is the username and password both.
+
+1. Connection program.
+ import java.sql.*; 
+ class MysqlCon{ 
+ public static void main(String args[]){ 
+ try{ 
+ Class.forName("com.mysql.jdbc.Driver"); 
+ Connection con=DriverManager.getConnection( 
+ "jdbc:mysql://localhost:3306/sonoo","root","root"); 
+ //here sonoo is database name, root is username and password 
+ Statement stmt=con.createStatement(); 
+ ResultSet rs=stmt.executeQuery("select * from emp"); 
+ while(rs.next()) 
+ System.out.println(rs.getInt(1)+" "+rs.getString(2)+" "+rs.getString(3)); 
+ con.close(); 
+ }catch(Exception e){ System.out.println(e);} 
+ } 
+ }
+
+
+2. Insert record
+package simple;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+public class insert {
+public static void main(String[] args) {
+// TODO Auto-generated method stub
+try{ 
+Class.forName("com.mysql.cj.jdbc.Driver"); 
+Connection con=DriverManager.getConnection( 
+"jdbc:mysql://localhost:3306/TE","root","123"); 
+Statement stmt=con.createStatement(); 
+ // Execute a query
+ System.out.println("Inserting records into the table..."); 
+ String sql = "INSERT INTO student VALUES (100, 'Zara')";
+ stmt.executeUpdate(sql);
+ sql = "INSERT INTO student VALUES (101, 'Mahnaz')";
+ stmt.executeUpdate(sql);
+ sql = "INSERT INTO student VALUES (102, 'Zaid')";
+ stmt.executeUpdate(sql);
+ sql = "INSERT INTO student VALUES(103, 'Sumit')";
+ stmt.executeUpdate(sql);
+ System.out.println("Inserted records into the table..."); 
+ 
+}catch(Exception e){ System.out.println(e);
+}
+}
+}
+
+
+3. Update Record
+package simple;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.DriverManager;
+import java.sql.Statement;
+public class update {
+static final String QUERY = "SELECT rollno,name FROM student";
+public static void main(String[] args) {
+// TODO Auto-generated method stub
+try{ 
+Class.forName("com.mysql.cj.jdbc.Driver"); 
+Connection con=DriverManager.getConnection( 
+"jdbc:mysql://localhost:3306/TE","root","Root@1234"); 
+//here sonoo is database name, root is username and password
+ Statement stmt=con.createStatement();
+ String sql = "UPDATE student " +
+ "SET name = 'om' WHERE rollno in (100)";
+ stmt.executeUpdate(sql);
+ ResultSet rs = stmt.executeQuery(QUERY);
+ while(rs.next()){
+ //Display values
+ System.out.println(rs.getInt(1)+" "+rs.getString(2)); 
+ }}catch(Exception e){ System.out.println(e);} 
+}
+}
+
+
+4. Delete record 
+mport java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+public class JDBCExample {
+ static final String DB_URL = "jdbc:mysql://localhost/TUTORIALSPOINT";
+ static final String USER = "guest";
+ static final String PASS = "guest123";
+ static final String QUERY = "SELECT id, first, last, age FROM Registration";
+ public static void main(String[] args) {
+ // Open a connection
+ try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+ Statement stmt = conn.createStatement();
+ ) { 
+ String sql = "DELETE FROM Registration " +
+ "WHERE id = 101";
+ stmt.executeUpdate(sql);
+ ResultSet rs = stmt.executeQuery(QUERY);
+ while(rs.next()){
+ //Display values
+ System.out.print("ID: " + rs.getInt("id"));
+ System.out.print(", Age: " + rs.getInt("age"));
+ }
+ rs.close();
+ } catch (SQLException e) {
+ e.printStackTrace();
+ } 
+ }
+}
