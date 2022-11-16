@@ -1,79 +1,165 @@
-create database stud;
+Microsoft Windows [Version 10.0.19044.2130]
+(c) Microsoft Corporation. All rights reserved.
 
-use stud;
+C:\Users\nitro>mysql -u root -p
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 19
+Server version: 8.0.31 MySQL Community Server - GPL
 
-create table stud_marks(rollno int(2),name varchar(12),total_marks int(12));
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
 
-insert into stud_marks values(1,"Ravi",933),(2,"sagar",450),(3,"sarita",1300),(4,"avi",250),(5,"raj",675); 
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
 
-select * from stud_marks;
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
-create table new_stud_marks(roll_no int(2),name char(10),grade char(10));
+mysql> create database yash1;
+Query OK, 1 row affected (0.04 sec)
 
-delimiter //
+mysql> use yash1;
+Database changed
+mysql> create table marks(rollno int PRIMARY KEY,name varchar(20),sub1 int,sub2 int,sub3 int,sub4 int,sub5 int);
+Query OK, 0 rows affected (1.91 sec)
 
-create procedure proc_grade1()
+mysql> create table stud_marks(rollno int, name varchar(50),total int);
+Query OK, 0 rows affected (0.10 sec)
 
-begin
-declare i int;
-declare n int;
-declare rollno1 int;
-declare name1 varchar(20);
-declare class1 varchar(40);
-declare total1 int;
-declare s1 int;
-declare s2 int;
-declare s3 int;
-declare s4 int;
-declare s5 int;
-select count(*)into n from marks;
-set i=0;
-disp:loop
-set i=i+1;
-select rollno into rollno1 from marks where rollno=i;
-select name into name1 from marks where rollno=i;
-select sub1 into s1 from marks where rollno=i;
-select sub2 into s2 from marks where rollno=i;
-select sub3 into s3 from marks where rollno=i;
-select sub4 into s4 from marks where rollno=i;
-select sub5 into s5 from marks where rollno=i;
-set total1=s1+s2+s3+s4+s5;
-if total1<=1500 and total1>990 then
-set class1='distinction';
-else
-if total1<=989 and total1>900 then
-set class1='first class';
-else
-if total1<899 and total1>825 then
-set class1='higher class';
-else
-set class1='pass class';
-end if;
-end if;
-end if;
-insert into stud_marks values(rollno1,name1,total1);
-insert into results values(rollno1,name1,class1);
-if i=n then
-leave disp;
-end if;
-end loop;
-end
+mysql> create table results(rollno int, name varchar(20),class varchar(60));
+Query OK, 0 rows affected (0.12 sec)
 
-//
+mysql> insert into marks values(1,'yash',83,94,86,99,63);
+Query OK, 1 row affected (0.15 sec)
 
-delimiter ;
+mysql> insert into marks values(2,'mahadev',98,94,92,99,97);
+Query OK, 1 row affected (0.07 sec)
 
-create table stud_marks1(rolllno int,name varchar(90),class varchar(90));
+mysql> insert into marks values(3,'dishant',66,77,78,88,99);
+Query OK, 1 row affected (0.13 sec)
 
-create table results(rollno int,name varchar(90),class varchar(90));
+mysql> insert into marks values(4,'aryaa',80,92,93,88,65);
+Query OK, 1 row affected (0.07 sec)
 
-alter table stud_marks1 drop class;
+mysql> desc marks;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| rollno | int         | NO   | PRI | NULL    |       |
+| name   | varchar(20) | YES  |     | NULL    |       |
+| sub1   | int         | YES  |     | NULL    |       |
+| sub2   | int         | YES  |     | NULL    |       |
+| sub3   | int         | YES  |     | NULL    |       |
+| sub4   | int         | YES  |     | NULL    |       |
+| sub5   | int         | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+7 rows in set (0.14 sec)
 
-alter table stud_marks1 add total int;
+mysql> desc stud_marks;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| rollno | int         | YES  |     | NULL    |       |
+| name   | varchar(50) | YES  |     | NULL    |       |
+| total  | int         | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
 
-call proc_grade1();
+mysql> desc results;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| rollno | int         | YES  |     | NULL    |       |
+| name   | varchar(20) | YES  |     | NULL    |       |
+| class  | varchar(60) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
 
-select * from stud_marks;
+mysql> delimiter //
+mysql> create procedure PROC_GRADES()
+    -> begin
+    -> declare i int;
+    -> declare n int(10);
+    -> declare rollno1 int(10);
+    -> declare total1 int(10);
+    -> declare name1 varchar(50);
+    -> declare class1 varchar(50);
+    -> declare s1 int;
+    -> declare s2 int;
+    -> declare s3 int;
+    -> declare s4 int;
+    -> declare s5 int;
+    -> select count(*) into n from marks;
+    -> set i=0;
+    -> disp:loop
+    -> set i=i+1;
+    -> select rollno into rollno1 from marks where rollno=i;
+    -> select name into name1 from marks where rollno=i;
+    -> select sub1 into s1 from marks where rollno=i;
+    -> select sub2 into s2 from marks where rollno=i;
+    -> select sub3 into s3 from marks where rollno=i;
+    -> select sub4 into s4 from marks where rollno=i;
+    -> select sub5 into s5 from marks where rollno=i;
+    -> set total1=s1+s2+s3+s4+s5;
+    -> if total1<540 AND total1>=460 then
+    -> set class1='DISTINCTTION';
+    -> else
+    -> if total1<=439 AND total1>=400 then
+    -> set class1='FIRST CLASS';
+    -> else
+    -> if total1<=400 AND total1>=350 then
+    -> set class1='HIGHER SECOND CLASS';
+    -> ELSE
+    -> set class1='PASS CLASS';
+    -> end if;
+    -> end if;
+    -> end if;
+    -> insert into stud_marks values(rollno,name1,total1);
+    -> insert into results values(rollno1 , name1,class1);
+    -> if i=n then
+    -> leave disp;
+    -> end if;
+    -> end loop;
+    -> end;
+    -> //
+Query OK, 0 rows affected, 3 warnings (0.07 sec)
 
-select * from results;
+mysql> DELIMITER ;
+mysql> call PROC_GRADES();
+Query OK, 1 row affected (0.23 sec)
 
+mysql> select * from marks;
++--------+---------+------+------+------+------+------+
+| rollno | name    | sub1 | sub2 | sub3 | sub4 | sub5 |
++--------+---------+------+------+------+------+------+
+|      1 | yash    |   83 |   94 |   86 |   99 |   63 |
+|      2 | mahadev |   98 |   94 |   92 |   99 |   97 |
+|      3 | dishant |   66 |   77 |   78 |   88 |   99 |
+|      4 | aryaa   |   80 |   92 |   93 |   88 |   65 |
++--------+---------+------+------+------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> select * from stud_marks;
++--------+---------+-------+
+| rollno | name    | total |
++--------+---------+-------+
+|   NULL | yash    |   425 |
+|   NULL | mahadev |   480 |
+|   NULL | dishant |   408 |
+|   NULL | aryaa   |   418 |
++--------+---------+-------+
+4 rows in set (0.00 sec)
+
+
+mysql> select * from results;
++--------+---------+-------------+
+| rollno | name    | class       |
++--------+---------+-------------+
+|      1 | yash    | FIRST CLASS |
+|      2 | mahadev | PASS CLASS  |
+|      3 | dishant | FIRST CLASS |
+|      4 | aryaa   | FIRST CLASS |
++--------+---------+-------------+
+4 rows in set (0.00 sec)
+
+mysql>
